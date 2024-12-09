@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Entity\ComplexProductsCTI;
 use App\Entity\SimpleProductCTI;
 use App\Entity\SimpleProductSTI;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,5 +77,30 @@ class ProductsController extends AbstractController
             'controller_name' => 'ProductsCTIController',
             'product' => $complexProduct
         ]);
+    }
+    #[Route('/create-article', name: 'create_article')]
+    public function createArticle(EntityManagerInterface $em): Response
+    {
+        $article = new Article();
+        $article->setTitle('Mon premier article');
+        $article->setCreatedAt(new \DateTimeImmutable());
+
+        $em->persist($article);
+        $em->flush();
+
+        return new Response('Article créé avec l\'ID : ' . $article->getId());
+    }
+
+    #[Route('/create-user', name: 'create_user')]
+    public function createUser(EntityManagerInterface $em): Response
+    {
+        $user = new User();
+        $user->setUsername('JohnDoe');
+        $user->setCreatedAt(new \DateTimeImmutable());
+
+        $em->persist($user);
+        $em->flush();
+
+        return new Response('User créé avec l\'ID : ' . $user->getId());
     }
 }
